@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div>
+    <h1>TodoList</h1>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Completed</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for todo in todolist %}
+        <tr>
+          <td>{{ todo.title }}</td>
+          <td>
+            {% if todo.completed %}
+              <del>已完成</del>
+            {% else %}
+              <form action="/complete/{{ todo.id }}/">
+                <button class="btn btn-primary" type="submit">标记完成</button>
+              </form>
+            {% endif %}
+          </td>
+          <td>
+            <form action="/delete/{{ todo.id }}/">
+              <button class="btn btn-primary" type="submit">删除</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div>
+      <button class="btn btn-primary" data-toggle="modal" data-target="#modal-add">添加</button>
+    </div>
+
+    <div class="modal fade" id="modal-add">
+      <form method="post">
+        {% csrf_token %}
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>ADD TODO</h4>
+            </div>
+            <div class="modal-body">
+              <div class="input-group">
+                <span class="input-group-addon">title</span>
+                <input type="text" class="form-control" name="title" />
+              </div>
+            </div>
+            <input type="hidden" name="action" value="add" />
+            <div class="modal-footer">
+              <button class="btn btn-primary" type="submit">确定</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
